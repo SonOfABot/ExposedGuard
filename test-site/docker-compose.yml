@@ -1,0 +1,7 @@
+services:
+  test-site:
+    build: .
+    container_name: eg-test
+    ports:
+      - "8080:8080"   # vulnerable site
+      - "8081:8081"   # clean SPA (false-positive trap)

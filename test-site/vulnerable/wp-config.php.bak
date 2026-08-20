@@ -1,0 +1,7 @@
+<?php
+define('DB_NAME', 'acme_wp');
+define('DB_USER', 'wp_admin');
+define('DB_PASSWORD', 'fake-wp-password-not-real');
+define('DB_HOST', 'localhost');
+define('AUTH_KEY', 'fake-key');
+require_once ABSPATH . 'wp-settings.php';

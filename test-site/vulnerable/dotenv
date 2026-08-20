@@ -1,0 +1,9 @@
+# Acme Corp production secrets (FAKE - test data only)
+APP_ENV=production
+APP_KEY=base64:FakeTestKeyNotReal1234567890abcd=
+DB_HOST=db.acme.internal
+DB_USER=acme_admin
+DB_PASS=s3cret-fake-password-not-real
+AWS_ACCESS_KEY_ID=AKIAFAKEEXAMPLE12345
+AWS_SECRET_ACCESS_KEY=fakeSecretFakeSecretFakeSecretFake12
+STRIPE_SECRET_KEY=sk_test_NOT_A_REAL_KEY

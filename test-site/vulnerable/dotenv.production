@@ -1,0 +1,3 @@
+APP_ENV=production
+REDIS_HOST=redis.acme.internal
+REDIS_PASSWORD=another-fake-redis-password

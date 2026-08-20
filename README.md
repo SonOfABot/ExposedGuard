@@ -37,3 +37,4 @@ downloads the whole archive - just enough to check magic bytes.
   preview, manual re-check, cross-site history, "clear all"
 - Results persist in `storage.local` across restarts
 
+

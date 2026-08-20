@@ -1,5 +1,12 @@
-// Load the cross-browser polyfill first (defines `browser` on Chromium).
-importScripts("browser-polyfill.min.js");
+// Cross-browser polyfill loading:
+// - Chromium MV3: this file runs as a service worker, so importScripts exists
+//   and loads the polyfill (which defines the promise-based `browser` API).
+// - Firefox MV2: the polyfill is already loaded via background.scripts in the
+//   manifest, and importScripts does not exist in a background page, so this
+//   line is skipped.
+if (typeof importScripts === "function" && typeof globalThis.browser === "undefined") {
+  importScripts("browser-polyfill.min.js");
+}
 
 "use strict";
 

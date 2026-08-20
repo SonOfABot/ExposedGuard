@@ -1,0 +1,7 @@
+stages:
+  - build
+  - deploy
+build_job:
+  image: node:20
+  script:
+    - npm ci && npm run build
