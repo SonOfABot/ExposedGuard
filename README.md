@@ -7,7 +7,7 @@ One shared codebase (`src/`), one build per browser (`dist/`), produced by
 
 | Build | Manifest | Browsers |
 |---|---|---|
-| `dist/firefox/` | MV2 (`background.scripts`) | Firefox desktop 109+, Firefox for Android 120+ |
+| `dist/firefox/` | MV2 (`background.scripts`) | Firefox desktop 140+, Firefox for Android 142+ |
 | `dist/chrome/` | MV3 (`background.service_worker`) | Chrome 102+ |
 | `dist/brave/` | MV3 | Brave |
 | `dist/opera/` | MV3 | Opera |
@@ -69,8 +69,11 @@ folder:
 - **Nightly/Beta:** create a custom add-on collection on AMO and point
   Nightly's "Custom Add-on collection" setting at it.
 
-The Firefox manifest already includes `gecko_android` (min 120) and the popup
-is mobile-sized (viewport meta, `max-width: 480px`).
+The Firefox manifest already includes `gecko_android` (min 142, where the
+required `data_collection_permissions` key is supported) and the popup is
+mobile-sized (viewport meta, `max-width: 480px`). On AMO, Android availability
+is enabled per-version: in the Developer Hub version page, keep the
+"Firefox for Android" platform option checked when uploading.
 
 **Safari:** convert the chromium build with Apple's tool on macOS:
 `xcrun safari-web-extension-converter dist/chrome`
