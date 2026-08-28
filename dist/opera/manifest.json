@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "ExposedGuard - .git & .env checker",
   "version": "1.2.1",
   "description": "Checks whether the sites you visit publicly expose their .git directory, .env files, or references to them - and warns you.",
@@ -11,15 +11,16 @@
     "webNavigation",
     "tabs",
     "storage",
-    "notifications",
+    "notifications"
+  ],
+  "host_permissions": [
     "http://*/*",
     "https://*/*"
   ],
   "background": {
-    "scripts": ["browser-polyfill.min.js", "background.js"],
-    "persistent": true
+    "service_worker": "background.js"
   },
-  "browser_action": {
+  "action": {
     "default_icon": {
       "48": "icons/icon-48.png",
       "96": "icons/icon-96.png"
@@ -34,14 +35,5 @@
       "run_at": "document_idle"
     }
   ],
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "exposedguard@local.dev",
-      "strict_min_version": "109.0",
-      "data_collection_permissions": {}
-    },
-    "gecko_android": {
-      "strict_min_version": "120.0"
-    }
-  }
+  "minimum_chrome_version": "102"
 }

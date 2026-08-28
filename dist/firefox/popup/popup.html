@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icon-48.png" alt="" width="24" height="24">
+    <h1>ExposedGuard</h1>
+  </header>
+
+  <section id="current">
+    <div class="site-row">
+      <span id="host" class="host">-</span>
+      <span id="status" class="pill pill-idle">checking...</span>
+    </div>
+    <ul id="findings" class="findings"></ul>
+    <div id="refs-wrap" class="refs" hidden>
+      <h2>References found in page source</h2>
+      <ul id="refs"></ul>
+    </div>
+    <button id="recheck" type="button">Re-check this site</button>
+  </section>
+
+  <section id="history">
+    <div class="history-head">
+      <h2>Sites with findings</h2>
+      <button id="clear" type="button" class="link">Clear all</button>
+    </div>
+    <ul id="history-list" class="history-list"></ul>
+  </section>
+
+  <script src="../browser-polyfill.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -2,11 +2,23 @@
 
 A browser extension that checks whether the sites you visit publicly expose their .git directory, .env files, or references to them and warns you.
 
-Runs on Firefox (desktop + Android), Chrome, Edge, Brave, Opera and other
-Chromium browsers. Manifest V3, one codebase for all browsers:
-`browser-polyfill.min.js` (Mozilla's official
+One shared codebase (`src/`), one build per browser (`dist/`), produced by
+`build.py`:
+
+| Build | Manifest | Browsers |
+|---|---|---|
+| `dist/firefox/` | MV2 (`background.scripts`) | Firefox desktop 109+, Firefox for Android 120+ |
+| `dist/chrome/` | MV3 (`background.service_worker`) | Chrome 102+ |
+| `dist/brave/` | MV3 | Brave |
+| `dist/opera/` | MV3 | Opera |
+| `dist/edge/` | MV3 | Edge |
+
+Firefox stable does not support MV3 service workers (hence the MV2 build);
+Chromium does not accept MV2 (hence the MV3 build). The JS is identical in
+both - `browser-polyfill.min.js` (Mozilla's official
 [webextension-polyfill](https://github.com/mozilla/webextension-polyfill))
-defines the promise-based `browser` API on Chromium (Firefox has it natively).
+provides the promise-based `browser` API on Chromium, and `background.js`
+loads it via `importScripts` only when running as a service worker.
 
 ## What it checks (~50 probes)
 
@@ -37,4 +49,78 @@ downloads the whole archive - just enough to check magic bytes.
   preview, manual re-check, cross-site history, "clear all"
 - Results persist in `storage.local` across restarts
 
+## Install for development
 
+Run `python build.py` first (see below), then load the matching `dist/`
+folder:
+
+**Firefox desktop:** `about:debugging#/runtime/this-firefox` ->
+**Load Temporary Add-on...** -> pick `dist/firefox/manifest.json`
+
+**Chrome / Edge / Brave / Opera:** open `chrome://extensions` (or
+`edge://extensions`, `brave://extensions`, `opera://extensions`) -> enable
+**Developer mode** -> **Load unpacked** -> pick `dist/<browser>/`
+
+**Firefox for Android:** Android only installs signed extensions from AMO:
+
+- **Simplest:** sign the firefox zip on AMO as *self-distributed*, then
+  install the signed `.xpi` via
+  `web-ext run --target=firefox-android` over USB debugging.
+- **Nightly/Beta:** create a custom add-on collection on AMO and point
+  Nightly's "Custom Add-on collection" setting at it.
+
+The Firefox manifest already includes `gecko_android` (min 120) and the popup
+is mobile-sized (viewport meta, `max-width: 480px`).
+
+**Safari:** convert the chromium build with Apple's tool on macOS:
+`xcrun safari-web-extension-converter dist/chrome`
+
+## Building
+
+```sh
+python build.py
+```
+
+This regenerates every `dist/<browser>/` folder from `src/` and creates an
+upload zip per browser: `dist/exposed-guard-<version>-<browser>.zip`.
+Each zip has `manifest.json` at its root (a store requirement). Edit shared
+code in `src/`, then rebuild. To bump the version, edit both
+`src/manifest.firefox.json` and `src/manifest.chromium.json` - the build
+fails if they disagree.
+
+Store notes:
+
+- **AMO (Firefox):** upload the firefox zip -> listed (public) or
+  self-distributed.
+- **Chrome Web Store / Edge Add-ons / Opera add-ons:** upload the matching
+  MV3 zip. Chrome requires a $5 one-time developer account; the broad
+  `host_permissions` will prompt a justification field during review - state
+  that the extension fetches well-known paths on visited sites to detect
+  exposed files.
+
+## Customizing the target list
+
+Edit `CHECK_TARGETS` at the top of `src/background.js` - each entry is a
+path, a severity (`critical` / `high` / `medium` / `low`), and a
+`validate(status, text, bytes)` function. Shared validators (`isEnv`,
+`isZip`, `isSqlDump`, `isWpConfig`, ...) cover the common patterns.
+
+## Test lab
+
+`test-site/` contains a Docker lab: a deliberately vulnerable site (all
+exposures present) and a "clean" SPA whose catch-all route answers every
+path with `200 + HTML` - proving the false-positive rejection works.
+
+```sh
+cd test-site
+docker build -t exposed-guard-test .
+docker run -d --name eg-test -p 8080:8080 -p 8081:8081 exposed-guard-test
+# vulnerable: http://localhost:8080  |  clean SPA: http://localhost:8081
+docker stop eg-test   # when done
+```
+
+## Legal note
+
+Only probe sites you own or are authorized to test. Exposed `.git`/`.env`
+data belongs to the site operator - report it (e.g. via their
+`security.txt`) instead of downloading it.

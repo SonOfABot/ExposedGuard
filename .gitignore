@@ -1,4 +1,0 @@
-# Build outputs (regenerate with: python build.py)
-dist/
-*.zip
-__pycache__/
