@@ -1,0 +1,6 @@
+# Build outputs (regenerate with: python build.py)
+dist/
+*.zip
+# ...but keep the Docker lab's zip fixture, it is source, not output
+!test-site/vulnerable/backup.zip
+__pycache__/
