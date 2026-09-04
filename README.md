@@ -2,6 +2,10 @@
 
 A browser extension that checks whether the sites you visit publicly expose their .git directory, .env files, or references to them and warns you.
 
+Exposed Guard is on Firefox extension store (it's the main browser i use hence I pushed it there), you can build locally and upload but I should push to all browsers this month
+<img width="374" height="641" alt="image" src="https://github.com/user-attachments/assets/2eb30fba-3abf-45d4-952f-84e1c1fc1850" />
+
+
 One shared codebase (`src/`), one build per browser (`dist/`), produced by
 `build.py`:
 
